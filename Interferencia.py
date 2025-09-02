@@ -5,7 +5,6 @@ import matplotlib.widgets as widgets
 import matplotlib.colors as colors
 import math
 
-
 # Se definen los parámetros necesarios para los cálculos
 screen_width = 0.3
 screen_height = 0.02
@@ -149,6 +148,7 @@ wavelength_slider.on_changed(update_wavelength)
 screen_slider.on_changed(update_screenDistance) 
 slitSeparation_slider.on_changed(update_slitSeparation) 
 width_slider.on_changed(update_slitWidth) 
+
 
 
 plt.show()
