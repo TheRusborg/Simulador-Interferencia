@@ -6,57 +6,48 @@ import matplotlib.colors as colors
 import math
 
 
-
 # Se definen los parámetros necesarios para los cálculos
-ancho = 0.3
-alto = 0.02
+screen_width = 0.3
+screen_height = 0.02
 
 Iluminacion_o = 10
-long_onda = 520*10**(-10)    #520nm
-dist_pantalla = 2
-dist_rejillas = 0.000001
-size_rejillas = 0.00001
+wavelength = 520*10**(-10)    #520nm
+screenDist = 2
+slitSeparation = 0.000002
+slitWidth = 0.0000002
 
 
-def Desfase(x):
-    # desfase = (abs(((ancho/2)-x))/(ancho/2))*(dist_rejillas/dist_pantalla)      # Máximo principal en centro
-    desfase = x*(dist_rejillas/dist_pantalla)     # Máximo principal en 0
+def Desfase(x, screenDist=screenDist, slitSeparation=slitSeparation):
+    desfase = x*(slitSeparation/screenDist)
     return desfase
 
 
-def Intensidad(x, long_onda=long_onda):
-    desfase = Desfase(x)
-    intensidad = 2*Iluminacion_o*(1+np.cos((2*np.pi*desfase)/long_onda))
+def Intensidad(x, wavelength=wavelength, screenDist=screenDist,
+               slitSeparation=slitSeparation, slitWidth=slitWidth):
+    
+    desfase = Desfase(x, screenDist=screenDist, slitSeparation=slitSeparation)
+    alpha = np.arctan(x/screenDist)
+    # intensidad = 2*Iluminacion_o*(1+np.cos((2*np.pi*desfase)/wavelength))
+    intensidad = Iluminacion_o*((np.cos((np.pi*slitSeparation*np.sin(alpha))/wavelength))**2)*((np.sin(np.pi*slitWidth*np.sin(alpha)/wavelength))/(np.pi*slitWidth*np.sin(alpha)/wavelength))**2
     return intensidad
 
 
-'''
-def Pintar(x):
-    intensidad = Intensidad(x)
-    desfase = Desfase(x)
-    # pygame.draw.line(screen, (54+intensidad*2, 255-intensidad, intensidad*2, intensidad/(4*Iluminacion_o)), (x, 0), (x, altura), 1)
-
-    pygame.draw.line(surface, (0, 255, 0, (intensidad/(4*Iluminacion_o))*255), (x, 0), (x, altura), 1)
-    print(intensidad/(4*Iluminacion_o))
-'''
- 
  
 # Plot
 
 ### Asignar un color para cada (x,y)
-
 res = 2000
-m, n = int(2*ancho*res), int(2*alto*res)
-x = np.linspace(-ancho, ancho, m)
-y = np.linspace(-alto, alto, n)
+m, n = int(2*screen_width*res), int(2*screen_height*res)
+x = np.linspace(-screen_width, screen_width, m)
+y = np.linspace(-screen_height, screen_height, n)
 
-transparencia = np.zeros((m,n))
+arr_intensidad = np.zeros((m,n))
 
 for i,val in enumerate(x):
     for j in range(n):
         intensidad = Intensidad(val)/4*Iluminacion_o
-        transparencia[i][j] = intensidad
-transparencia = transparencia[:-1, :-1]
+        arr_intensidad[i][j] = intensidad
+arr_intensidad = arr_intensidad[:-1, :-1]
 
 
 y,x=np.meshgrid(y, x)
@@ -64,36 +55,100 @@ y,x=np.meshgrid(y, x)
 
 
 fig, ax = plt.subplots()
-plt.subplots_adjust(bottom=0.25)
+plt.subplots_adjust(bottom=0.3)
 
 
 # follwing step plots the heatmap of 2D-array A
-graph = ax.pcolormesh(x, y, transparencia, cmap ='Greens')
+graph = ax.pcolormesh(x, y, arr_intensidad, cmap ='Greens_r')
 
 # following step adds the scale of the heatmap to the figure
 plt.colorbar(graph, orientation='horizontal')
 
-# Slider
-ax_slider = plt.axes([0.18, 0.1, 0.65, 0.03])  # [left, bottom, width, height]
-lambda_slider = widgets.Slider(ax_slider, "lambda", 380*10**(-10), 700*10**(-10), valinit=long_onda)
+# Sliders
+ax_slider1 = plt.axes([0.18, 0.24, 0.65, 0.03])  # [left, bottom, width, height]
+wavelength_slider = widgets.Slider(ax_slider1, "Wavelength", 380*10**(-10), 700*10**(-10), valinit=wavelength)
+
+
+ax_slider2 = plt.axes([0.18, 0.17, 0.65, 0.03])  # [left, bottom, width, height]
+screen_slider = widgets.Slider(ax_slider2, "Screen distance", 0.1, 5, valinit=screenDist)
+
+
+ax_slider3 = plt.axes([0.18, 0.10, 0.65, 0.03])  # [left, bottom, width, height]
+slitSeparation_slider = widgets.Slider(ax_slider3, "Slit separation", 0.000001, 0.00001, valinit=slitSeparation)
+
+
+ax_slider4 = plt.axes([0.18, 0.03, 0.65, 0.03])  # [left, bottom, width, height]
+width_slider = widgets.Slider(ax_slider4, "Slit width", 0.0000001, 0.000001, valinit=slitWidth)
+
+
 
 
 # Función de actualización
-def update(val,m=m, n=n, ancho=ancho, alto=alto):
-    x = np.linspace(-ancho, ancho, m)
-    y = np.linspace(-alto, alto, n)
-    a = lambda_slider.val
-    transparencia_new = np.zeros((m,n))
+def update_wavelength(val,m=m, n=n, width=screen_width, height=screen_height):
+    x = np.linspace(-width, width, m)
+    y = np.linspace(-height, height, n)
+    a = wavelength_slider.val
+    arrIntensidad_new = np.zeros((m,n))
     for i,valor in enumerate(x):
         for j in range(n):
-            intensidad = Intensidad(valor, a)/4*Iluminacion_o
-            transparencia_new[i][j] = intensidad
-    transparencia_new = transparencia_new[:-1, :-1]
+            intensidad = Intensidad(valor, wavelength=a)/4*Iluminacion_o
+            arrIntensidad_new[i][j] = intensidad
+    arrIntensidad_new = arrIntensidad_new[:-1, :-1]
     
-    graph.set_array(transparencia_new.ravel())  # actualizar los valores
+    graph.set_array(arrIntensidad_new.ravel())  # actualizar los valores
     fig.canvas.draw_idle()
 
-lambda_slider.on_changed(update)
+
+def update_screenDistance(val,m=m, n=n, width=screen_width, height=screen_height):
+    x = np.linspace(-width, width, m)
+    y = np.linspace(-height, height, n)
+    a = screen_slider.val
+    arrIntensidad_new = np.zeros((m,n))
+    for i,valor in enumerate(x):
+        for j in range(n):
+            intensidad = Intensidad(valor, screenDist=a)/4*Iluminacion_o
+            arrIntensidad_new[i][j] = intensidad
+    arrIntensidad_new = arrIntensidad_new[:-1, :-1]
+    
+    graph.set_array(arrIntensidad_new.ravel())  # actualizar los valores
+    fig.canvas.draw_idle()
+    
+    
+def update_slitSeparation(val,m=m, n=n, width=screen_width, height=screen_height):
+    x = np.linspace(-width, width, m)
+    y = np.linspace(-height, height, n)
+    a = slitSeparation_slider.val
+    arrIntensidad_new = np.zeros((m,n))
+    for i,valor in enumerate(x):
+        for j in range(n):
+            intensidad = Intensidad(valor, slitSeparation=a)/4*Iluminacion_o
+            arrIntensidad_new[i][j] = intensidad
+    arrIntensidad_new = arrIntensidad_new[:-1, :-1]
+    
+    graph.set_array(arrIntensidad_new.ravel())  # actualizar los valores
+    fig.canvas.draw_idle()
+    
+    
+def update_slitWidth(val,m=m, n=n, width=screen_width, height=screen_height):
+    x = np.linspace(-width, width, m)
+    y = np.linspace(-height, height, n)
+    a = width_slider.val
+    arrIntensidad_new = np.zeros((m,n))
+    for i,valor in enumerate(x):
+        for j in range(n):
+            intensidad = Intensidad(valor, slitWidth=a)/4*Iluminacion_o
+            arrIntensidad_new[i][j] = intensidad
+    arrIntensidad_new = arrIntensidad_new[:-1, :-1]
+    
+    graph.set_array(arrIntensidad_new.ravel())  # actualizar los valores
+    fig.canvas.draw_idle()
+    
+    
+
+wavelength_slider.on_changed(update_wavelength)
+screen_slider.on_changed(update_screenDistance) 
+slitSeparation_slider.on_changed(update_slitSeparation) 
+width_slider.on_changed(update_slitWidth) 
 
 
 plt.show()
