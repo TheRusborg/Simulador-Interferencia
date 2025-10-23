@@ -2,7 +2,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.widgets as widgets
 
-
 # Se definen los parámetros necesarios para los cálculos
 # Todas las unidades están en Sistema Internacional.
 screen_width = 0.3
@@ -15,6 +14,7 @@ wavelength = 520*10**(-10)
 screenDist = 2
 slitSeparation = 0.000002
 slitWidth = 0.0000002
+N_rejillas = 10
 
 
 # Se calcula el desfase entre los rayos de cada rejilla.
@@ -103,5 +103,44 @@ wavelength_slider.on_changed(update)
 screen_slider.on_changed(update) 
 slitSeparation_slider.on_changed(update) 
 width_slider.on_changed(update) 
+
+
+## Segundo plot
+
+fig, ax = plt.subplots()
+plt.subplots_adjust(bottom=0.35)
+
+intensidad_graf = []
+for val in x:
+    intensidad = Intensidad(val)/4*I_o
+    intensidad_graf.append(intensidad)
+
+
+plt.plot(x, intensidad_graf)
+
+
+# Sliders
+ax_slider1 = plt.axes([0.18, 0.21, 0.65, 0.03])  # [left, bottom, width, height]
+wavelength_slider = widgets.Slider(ax_slider1, "Wavelength [m]", 380*10**(-10), 700*10**(-10), valinit=wavelength)
+
+
+ax_slider2 = plt.axes([0.18, 0.15, 0.65, 0.03])  # [left, bottom, width, height]
+screen_slider = widgets.Slider(ax_slider2, "Screen distance [m]", 0.1, 5, valinit=screenDist)
+
+
+ax_slider3 = plt.axes([0.18, 0.09, 0.65, 0.03])  # [left, bottom, width, height]
+slitSeparation_slider = widgets.Slider(ax_slider3, "Slit separation [m]", 0.000001, 0.00001, valinit=slitSeparation)
+
+
+ax_slider4 = plt.axes([0.18, 0.03, 0.65, 0.03])  # [left, bottom, width, height]
+width_slider = widgets.Slider(ax_slider4, "Slit width [m]", 0.0000001, 0.000001, valinit=slitWidth)
+
+
+wavelength_slider.on_changed(update)
+screen_slider.on_changed(update) 
+slitSeparation_slider.on_changed(update) 
+width_slider.on_changed(update) 
+
+
 
 plt.show()
