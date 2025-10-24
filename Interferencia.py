@@ -51,6 +51,7 @@ for i,val in enumerate(x):
 # Se usa la función meshgrid para hacer dos matrices con todos los puntos distribuidos.
 xx,yy=np.meshgrid(x,y)
 
+
 # Se preparan los subplots y los ejes.
 fig, ax = plt.subplots()
 plt.subplots_adjust(bottom=0.25)
@@ -58,6 +59,7 @@ plt.subplots_adjust(bottom=0.25)
 plt.title('Patrón de difracción')
 ax.set_xlabel('x (m)')
 ax.set_ylabel('y (m)')
+# plt.text(-.38, .0016 , '©TheRusborg', fontsize=8)
 
 # Se hace un "heatmap" usando las matrices obtenidas con meshgrid y se le asigna a cada posición una intensidad.
 # El método .T transpone la matriz.
@@ -103,56 +105,6 @@ wavelength_slider.on_changed(update)
 screen_slider.on_changed(update) 
 slitSeparation_slider.on_changed(update) 
 width_slider.on_changed(update) 
-
-
-## Segundo plot
-
-fig, ax = plt.subplots()
-plt.subplots_adjust(bottom=0.35)
-
-intensidad_graf = []
-for val in x:
-    intensidad = Intensidad(val)/4*I_o
-    intensidad_graf.append(intensidad)
-
-
-plt.plot(x, intensidad_graf)
-
-# Función de actualización 2
-def update2(val,m=m, n=n, width=screen_width):
-    x = np.linspace(-width, width, m)
-    
-    intensidad_new = np.zeros((m,n))
-    for i,valor in enumerate(x):
-        intensidad_new = Intensidad(valor, wavelength=wavelength_slider.val, screenDist=screen_slider.val, slitSeparation=slitSeparation_slider.val, slitWidth=width_slider.val)/4*I_o
-        intensidad_graf[i] = intensidad_new
-    
-    # heatmap.set_array(intensidad_graf.ravel())  # actualizar los valores
-    fig.canvas.draw_idle()
-
-
-# Sliders
-ax_slider1 = plt.axes([0.18, 0.21, 0.65, 0.03])  # [left, bottom, width, height]
-wavelength_slider = widgets.Slider(ax_slider1, "Wavelength [m]", 380*10**(-10), 700*10**(-10), valinit=wavelength)
-
-
-ax_slider2 = plt.axes([0.18, 0.15, 0.65, 0.03])  # [left, bottom, width, height]
-screen_slider = widgets.Slider(ax_slider2, "Screen distance [m]", 0.1, 5, valinit=screenDist)
-
-
-ax_slider3 = plt.axes([0.18, 0.09, 0.65, 0.03])  # [left, bottom, width, height]
-slitSeparation_slider = widgets.Slider(ax_slider3, "Slit separation [m]", 0.000001, 0.00001, valinit=slitSeparation)
-
-
-ax_slider4 = plt.axes([0.18, 0.03, 0.65, 0.03])  # [left, bottom, width, height]
-width_slider = widgets.Slider(ax_slider4, "Slit width [m]", 0.0000001, 0.000001, valinit=slitWidth)
-
-
-wavelength_slider.on_changed(update2)
-screen_slider.on_changed(update2) 
-slitSeparation_slider.on_changed(update2) 
-width_slider.on_changed(update2) 
-
 
 
 plt.show()
