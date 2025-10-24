@@ -118,6 +118,18 @@ for val in x:
 
 plt.plot(x, intensidad_graf)
 
+# Función de actualización 2
+def update2(val,m=m, n=n, width=screen_width):
+    x = np.linspace(-width, width, m)
+    
+    intensidad_new = np.zeros((m,n))
+    for i,valor in enumerate(x):
+        intensidad_new = Intensidad(valor, wavelength=wavelength_slider.val, screenDist=screen_slider.val, slitSeparation=slitSeparation_slider.val, slitWidth=width_slider.val)/4*I_o
+        intensidad_graf[i] = intensidad_new
+    
+    # heatmap.set_array(intensidad_graf.ravel())  # actualizar los valores
+    fig.canvas.draw_idle()
+
 
 # Sliders
 ax_slider1 = plt.axes([0.18, 0.21, 0.65, 0.03])  # [left, bottom, width, height]
@@ -136,10 +148,10 @@ ax_slider4 = plt.axes([0.18, 0.03, 0.65, 0.03])  # [left, bottom, width, height]
 width_slider = widgets.Slider(ax_slider4, "Slit width [m]", 0.0000001, 0.000001, valinit=slitWidth)
 
 
-wavelength_slider.on_changed(update)
-screen_slider.on_changed(update) 
-slitSeparation_slider.on_changed(update) 
-width_slider.on_changed(update) 
+wavelength_slider.on_changed(update2)
+screen_slider.on_changed(update2) 
+slitSeparation_slider.on_changed(update2) 
+width_slider.on_changed(update2) 
 
 
 
