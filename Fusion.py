@@ -14,7 +14,7 @@ screen_height = 0.001
 # I_o es la intensidad máxima (en el zero).
 I_o = 10
 
-wavelength = 520*10**(-10)
+wavelength = 520*10**(-9)
 screenDist = 2
 slitSeparation = 0.000002
 slitWidth = 0.0000002
@@ -181,6 +181,7 @@ wavelength_slider.on_changed(update2)
 screen_slider.on_changed(update2) 
 slitSeparation_slider.on_changed(update2) 
 width_slider.on_changed(update2) 
+
 
 
 
