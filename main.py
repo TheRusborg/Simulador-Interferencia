@@ -38,19 +38,19 @@ class MainWindow(QMainWindow):
         self.title.setStyleSheet("font-size: 30px; font-weight: bold; margin: 20px;")
 
         # Slider properties
-        self.slider1_title.setText("Slit separation / d (m)")
-        self.slider1_title.setStyleSheet("font-size: 16px; font-weight: bold; min-width: 200px;")
-
-        self.slider2_title.setText("Width / a (m)")
-        self.slider2_title.setStyleSheet("font-size: 16px; font-weight: bold; min-width: 200px;")
-
-        self.slider3_title.setText("Wavelength / λ (m)")
+        self.slider3_title.setText("Wavelength / λ")
         self.slider3_title.setStyleSheet("font-size: 16px; font-weight: bold; min-width: 200px;")
 
-        self.slider4_title.setText("Distance screen / D (m)")
+        self.slider4_title.setText("Screen distance  / D")
         self.slider4_title.setStyleSheet("font-size: 16px; font-weight: bold; min-width: 200px;")
 
-        value_style = "font-size: 16px; font-weight: bold; min-width: 80px; padding: 5px;"     # Estilo para los valores
+        self.slider1_title.setText("Slit separation / d")
+        self.slider1_title.setStyleSheet("font-size: 16px; font-weight: bold; min-width: 200px;")
+
+        self.slider2_title.setText("Width / a")
+        self.slider2_title.setStyleSheet("font-size: 16px; font-weight: bold; min-width: 200px;")
+
+        value_style = "font-size: 16px; font-weight: bold; min-width: 80px; padding: 5px;"
         self.slider1_value.setStyleSheet(value_style)
         self.slider2_value.setStyleSheet(value_style)
         self.slider3_value.setStyleSheet(value_style)
@@ -95,7 +95,7 @@ class MainWindow(QMainWindow):
         """
         Method for configuring the layouts on the main window.
         """
-        self.setGeometry(100, 100, 1400, 900)
+        self.setGeometry(1400, 900, 1400, 900)
         self.setWindowTitle("Simulador de Interferencia")
 
         # Config of the main_layout
@@ -132,37 +132,37 @@ class MainWindow(QMainWindow):
         self.slider_container.setMaximumWidth(800)
         
         # Crear filas para cada slider
-        self.create_slider_row(self.slider1_title, self.slider1, self.slider1_value, 0)
-        self.create_slider_row(self.slider2_title, self.slider2, self.slider2_value, 1)
-        self.create_slider_row(self.slider3_title, self.slider3, self.slider3_value, 2)
-        self.create_slider_row(self.slider4_title, self.slider4, self.slider4_value, 3)
+        self.create_slider_row(self.slider3_title, self.slider3, self.slider3_value, 0)
+        self.create_slider_row(self.slider4_title, self.slider4, self.slider4_value, 1)
+        self.create_slider_row(self.slider1_title, self.slider1, self.slider1_value, 2)
+        self.create_slider_row(self.slider2_title, self.slider2, self.slider2_value, 3)
 
     def setup_sliders(self):
         """
         Config of the value and range of the sliders.
         """
-        # Slider 1: Separation between slits (0.1μm to 10μm)
-        self.slider1.setMinimum(1)
-        self.slider1.setMaximum(100)
-        self.slider1.setValue(20)  # 2μm by default
+        # Slider 1: Separation between slits (1μm to 10μm)
+        self.slider1.setMinimum(1)           # 1μm
+        self.slider1.setMaximum(100)         # 10μm
+        self.slider1.setValue(20)            # 2μm by default
         self.slider1.setMinimumWidth(400)
 
-        # Slider 2: Width of the slit (0.01μm to 1μm)
-        self.slider2.setMinimum(1)
-        self.slider2.setMaximum(100)
-        self.slider2.setValue(20)  # 0.2μm by default
+        # Slider 2: Width of the slit (0.1μm to 1μm)
+        self.slider2.setMinimum(1)           # 0.1μm
+        self.slider2.setMaximum(100)         # 1μm 
+        self.slider2.setValue(20)            # 0.2μm by default
         self.slider2.setMinimumWidth(400)
 
         # Slider 3: Wavelength (400nm to 700nm)
-        self.slider3.setMinimum(400)
-        self.slider3.setMaximum(700)
-        self.slider3.setValue(520)  # 520nm by default
+        self.slider3.setMinimum(400)         # 400nm (violeta)
+        self.slider3.setMaximum(700)         # 700nm (red)
+        self.slider3.setValue(520)           # 520nm by default (green)
         self.slider3.setMinimumWidth(400)
 
-        # Slider 4: Distance to the screen (0.1m to 5m) - CORREGIDO: mínimo 1 (0.1m)
-        self.slider4.setMinimum(1)
-        self.slider4.setMaximum(50)
-        self.slider4.setValue(20)  # 2m by default
+        # Slider 4: Distance to the screen (0.1m to 5m)
+        self.slider4.setMinimum(1)           # 0.1m
+        self.slider4.setMaximum(50)          # 5m
+        self.slider4.setValue(20)            # 2m by default
         self.slider4.setMinimumWidth(400)
 
         # Setup initial values
@@ -187,11 +187,10 @@ class MainWindow(QMainWindow):
         """
         Returns the current slider values in proper physical units.
         """
-        # Convert slider values to physical units
-        slit_separation = self.slider1.value() / 10.0 * 1e-6  # μm to m
-        slit_width = self.slider2.value() / 100.0 * 1e-6      # μm to m  
-        wavelength = self.slider3.value() * 1e-9              # nm to m
-        screen_distance = self.slider4.value() / 10.0         # slider units to m
+        slit_separation = self.slider1.value() / 10.0 * 1e-6   # μm to m
+        slit_width = self.slider2.value() / 100.0 * 1e-6       # μm to m  
+        wavelength = self.slider3.value() * 1e-9               # 10^-9 (520nm verde)
+        screen_distance = self.slider4.value() / 10.0          # slider units to m
     
         return {
             'slit_separation': slit_separation,
@@ -199,7 +198,7 @@ class MainWindow(QMainWindow):
             'wavelength': wavelength,
             'screen_distance': screen_distance
         }
-
+    
     def slider_change(self):
         """
         Handles the changes and updates the plots.

@@ -18,22 +18,22 @@ def create_plots(main_window,
     # ===== CANVAS 1: Interference Pattern =====
     ax1 = main_window.figure1.add_subplot(111)
 
-    # Use slider values if provided, otherwise use defaults
+    # VALORES CON 520nm (VERDE)
     if slit_separation is None:
-        slit_separation = 0.000002
+        slit_separation = 0.000002      # 2μm
     if slit_width is None:
-        slit_width = 0.0000002
+        slit_width = 0.0000002          # 0.2μm
     if wavelength is None:
-        wavelength = 520*10**(-9)
+        wavelength = 520*10**(-9)       # 520nm (GREEN)
     if screen_distance is None:
-        screen_distance = 2
+        screen_distance = 2.0           # 2m
     
     # Make sure that screen_distance is not zero
     screen_distance = max(screen_distance, 0.1)
     
-    # Parameters
-    screen_width = 0.3
-    screen_height = 0.001
+    # Dimensiones de pantalla
+    screen_width = 0.3                  # 0.3m
+    screen_height = 0.001               # 0.001m
     I_o = 10
 
     # OPTIMISATION: vectorized function for performance
@@ -48,7 +48,7 @@ def create_plots(main_window,
             
             # Diffraction term
             sinc_arg = (np.pi * slitWidth * np.sin(alpha)) / wavelength
-            term_diffraction = np.sinc(sinc_arg / np.pi) ** 2  # np.sinc es más rápido
+            term_diffraction = (np.sin(sinc_arg) / sinc_arg) ** 2
             term_diffraction = np.nan_to_num(term_diffraction, nan=1.0)
             
             intensidad = I_o * term_interference * term_diffraction
@@ -61,10 +61,9 @@ def create_plots(main_window,
     time_diff = new_time - current_time
     main_window._last_update_time = new_time
     
-    # If the time between updates is small (<100ms) reduce resolution by a factor 100
     if time_diff < 0.1:
-        res_x = 5
-        res_y = 0.1
+        res_x = 250
+        res_y = 5
     else:
         res_x = 500
         res_y = 10
@@ -82,11 +81,9 @@ def create_plots(main_window,
 
     # Create meshgrid for plotting
     xx, yy = np.meshgrid(x, y, indexing='xy')
-
-    # OPTIMISATION: use imshow instead of pcolormesh for performance
-    extent = [-screen_width, screen_width, -screen_height, screen_height]
-    heatmap = ax1.imshow(arr_intensidad, extent=extent, aspect='auto',
-                        cmap='Greens_r', origin='lower')
+    heatmap = ax1.pcolormesh(xx, yy, arr_intensidad, 
+                            cmap='Greens_r', 
+                            shading='auto')
     
     # Customize the plot
     ax1.set_title('Patrón de difracción', fontsize=12, fontweight='bold')
