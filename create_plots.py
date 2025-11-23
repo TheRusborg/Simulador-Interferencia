@@ -32,8 +32,8 @@ def create_plots(main_window,
     screen_distance = max(screen_distance, 0.1)
     
     # Dimensiones de pantalla
-    screen_width = 0.3                  # 0.3m
-    screen_height = 0.001               # 0.001m
+    screen_width = 1.0
+    screen_height = 0.001
     I_o = 10
 
     # OPTIMISATION: vectorized function for performance
