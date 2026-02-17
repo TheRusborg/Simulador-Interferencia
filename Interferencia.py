@@ -5,15 +5,15 @@ import matplotlib.widgets as widgets
 # Se definen los parámetros necesarios para los cálculos
 # Todas las unidades están en Sistema Internacional.
 screen_width = 0.3
-screen_height = 0.001
+screen_height = 0.002
 
 # I_o es la intensidad máxima (en el zero).
 I_o = 10
 
-wavelength = 520*10**(-10)
+wavelength = 520*10**(-9)
 screenDist = 2
-slitSeparation = 0.000002
-slitWidth = 0.0000002
+slitSeparation = 0.00002
+slitWidth = 0.000002
 N_rejillas = 10
 
 
@@ -37,20 +37,26 @@ def Intensidad(x, wavelength=wavelength, screenDist=screenDist,
 # Se prepara y se hace el plot de los datos.
 # Se define la resolución de la imagen. Es la cantidad de puntos relativa al ancho y alto de la pantalla.
 res = 3000
-m, n = int(2*screen_width*res), int(2*screen_height*res)
+m, n = int(2*screen_width*res), int(screen_height*res)
 x = np.linspace(-screen_width, screen_width, m)
 y = np.linspace(-screen_height, screen_height, n)
 
 # Se añaden las intensidades en un array.
-arr_intensidad = np.zeros((m,n))
-for i,val in enumerate(x):
-    for j in range(n):
-        intensidad = Intensidad(val)/4*I_o
-        arr_intensidad[i][j] = intensidad
+vec_intensidad = np.zeros((m,1))
+
+for i, pos in enumerate(x):
+    intensidad = Intensidad(pos)/4*I_o
+    vec_intensidad[i][0] = intensidad
+
+vec_intensidad = vec_intensidad.T
+arr_intensidad = vec_intensidad
+for i in range(len(y)-1):
+    arr_intensidad = np.insert(arr_intensidad, arr_intensidad.shape[0], vec_intensidad, 0)
+    print(arr_intensidad, np.shape(arr_intensidad))
+arr_intensidad = arr_intensidad.T
 
 # Se usa la función meshgrid para hacer dos matrices con todos los puntos distribuidos.
 xx,yy=np.meshgrid(x,y)
-
 
 # Se preparan los subplots y los ejes.
 fig, ax = plt.subplots()
@@ -71,7 +77,7 @@ plt.colorbar(heatmap, orientation='horizontal')
 
 # Sliders
 ax_slider1 = plt.axes([0.18, 0.21, 0.65, 0.03])  # [left, bottom, width, height]
-wavelength_slider = widgets.Slider(ax_slider1, "Wavelength [m]", 380*10**(-10), 700*10**(-10), valinit=wavelength)
+wavelength_slider = widgets.Slider(ax_slider1, "Wavelength [m]", 380*10**(-9), 700*10**(-9), valinit=wavelength)
 
 
 ax_slider2 = plt.axes([0.18, 0.15, 0.65, 0.03])  # [left, bottom, width, height]
@@ -79,11 +85,11 @@ screen_slider = widgets.Slider(ax_slider2, "Screen distance [m]", 0.1, 5, valini
 
 
 ax_slider3 = plt.axes([0.18, 0.09, 0.65, 0.03])  # [left, bottom, width, height]
-slitSeparation_slider = widgets.Slider(ax_slider3, "Slit separation [m]", 0.000001, 0.00001, valinit=slitSeparation)
+slitSeparation_slider = widgets.Slider(ax_slider3, "Slit separation [m]", 0.00001, 0.0001, valinit=slitSeparation)
 
 
 ax_slider4 = plt.axes([0.18, 0.03, 0.65, 0.03])  # [left, bottom, width, height]
-width_slider = widgets.Slider(ax_slider4, "Slit width [m]", 0.0000001, 0.000001, valinit=slitWidth)
+width_slider = widgets.Slider(ax_slider4, "Slit width [m]", 0.000001, 0.00001, valinit=slitWidth)
 
 
 
