@@ -86,7 +86,7 @@ def create_plots(main_window,
                             shading='auto')
     
     # Customize the plot
-    ax1.set_title('Patrón de difracción', fontsize=12, fontweight='bold')
+    #ax1.set_title('Patrón de difracción', fontsize=12, fontweight='bold')
     ax1.set_xlabel('x (m)', fontsize=11)
     ax1.set_ylabel('y (m)', fontsize=11)
     
@@ -102,7 +102,7 @@ def create_plots(main_window,
     intensity_line = intensidad_vectorizada(x_line, wavelength, screen_distance, slit_separation, slit_width) / (4 * I_o)
     
     ax2.plot(x_line, intensity_line, 'b-', linewidth=2)
-    ax2.set_title('Distribución de intensidad', fontsize=12, fontweight='bold')
+    #ax2.set_title('Distribución de intensidad', fontsize=12, fontweight='bold')
     ax2.set_xlabel('x (m)', fontsize=11)
     ax2.set_ylabel('I (W)', fontsize=11)
     ax2.grid(True, alpha=0.3)
