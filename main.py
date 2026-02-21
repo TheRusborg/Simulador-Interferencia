@@ -7,6 +7,7 @@
 from PyQt5 import QtCore, QtWidgets, QtGui
 import numpy as np
 
+from mucho_texto import retranslateUi
 from left_panel import setup_left_panel
 from right_panel import setup_right_panel
 
@@ -33,38 +34,12 @@ class Ui_MainWindow(object):
         # Set the central widget
         MainWindow.setCentralWidget(self.centralwidget)
         
-        # Translate all widgets
-        self.retranslateUi(MainWindow)
-        
         # Set initial state
         self.tabWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
-    def retranslateUi(self, MainWindow):
-        _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
-
-        self.slider_label_1.setText(_translate("MainWindow", "Wavelength (λ)"))
-        self.slider_label_2.setText(_translate("MainWindow", "Screen distance (D)"))
-        self.slider_label_3.setText(_translate("MainWindow", "Slit separation (b)"))
-        self.slider_label_4.setText(_translate("MainWindow", "Slit width (a)"))    
-
-        self.slider_value_1.setText(_translate("MainWindow", "520 nm"))
-        self.slider_value_2.setText(_translate("MainWindow", "200 cm"))
-        self.slider_value_3.setText(_translate("MainWindow", "20 μm"))
-        self.slider_value_4.setText(_translate("MainWindow", "2 μm"))
-
-        self.title.setText(_translate("MainWindow", "# **SIMULADOR D\'INTERFERÈNCIA**"))
-        self.label_0.setText(_translate("MainWindow", "TextLabel"))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("MainWindow", "Experiment"))
-        self.label_1.setText(_translate("MainWindow", "TextLabel"))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab1), _translate("MainWindow", "Wavelength"))
-        self.label_2.setText(_translate("MainWindow", "TextLabel"))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab2), _translate("MainWindow", "Screen distance"))
-        self.label_3.setText(_translate("MainWindow", "TextLabel"))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab3), _translate("MainWindow", "Slit separation"))
-        self.label_4.setText(_translate("MainWindow", "TextLabel"))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab5), _translate("MainWindow", "Slit width"))
+        # Translate all widgets (text definition)
+        retranslateUi(self, MainWindow)
 
 
 # ===== MainApp CLASS HERE =====
@@ -97,7 +72,9 @@ class MainApp(QtWidgets.QMainWindow):
         self.update_plots()
     
     def update_plots(self):
-        """Update both plots with current slider values"""
+        """
+        Update both plots with current slider values
+        k"""
         # Get current values and convert to meters
         wavelength = self.ui.Slider_1.value() * 1e-9  # nm to m
         screen_distance = self.ui.Slider_2.value() / 100  # cm to m

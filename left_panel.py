@@ -146,15 +146,19 @@ def create_slider_labels(self):
     """
     self.slider_label_1 = QtWidgets.QLabel(self.verticalLayoutWidget_3)
     self.slider_label_1.setObjectName("slider_label_1")
+    self.slider_label_1.setStyleSheet("font-weight: bold; font-size: 11pt;")
     
     self.slider_label_2 = QtWidgets.QLabel(self.verticalLayoutWidget_3)
     self.slider_label_2.setObjectName("slider_label_2")
+    self.slider_label_2.setStyleSheet("font-weight: bold; font-size: 11pt;")
     
     self.slider_label_3 = QtWidgets.QLabel(self.verticalLayoutWidget_3)
     self.slider_label_3.setObjectName("slider_label_3")
+    self.slider_label_3.setStyleSheet("font-weight: bold; font-size: 11pt;")
     
     self.slider_label_4 = QtWidgets.QLabel(self.verticalLayoutWidget_3)
     self.slider_label_4.setObjectName("slider_label_4")
+    self.slider_label_4.setStyleSheet("font-weight: bold; font-size: 11pt;")
 
 def create_slider_values(self):
     """
@@ -162,12 +166,16 @@ def create_slider_values(self):
     """
     self.slider_value_1 = QtWidgets.QLabel(self.verticalLayoutWidget_3)
     self.slider_value_1.setObjectName("slider_value_1")
+    self.slider_value_1.setStyleSheet("font-weight: bold; font-size: 11pt;")
     
     self.slider_value_2 = QtWidgets.QLabel(self.verticalLayoutWidget_3)
     self.slider_value_2.setObjectName("slider_value_2")
+    self.slider_value_2.setStyleSheet("font-weight: bold; font-size: 11pt;")
     
     self.slider_value_3 = QtWidgets.QLabel(self.verticalLayoutWidget_3)
     self.slider_value_3.setObjectName("slider_value_3")
+    self.slider_value_3.setStyleSheet("font-weight: bold; font-size: 11pt;")
     
     self.slider_value_4 = QtWidgets.QLabel(self.verticalLayoutWidget_3)
     self.slider_value_4.setObjectName("slider_value_4")
+    self.slider_value_4.setStyleSheet("font-weight: bold; font-size: 11pt;")
